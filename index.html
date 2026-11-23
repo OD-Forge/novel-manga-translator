@@ -1,0 +1,871 @@
+<title>Novel &amp; Manga Translator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Translate novels and manga between 22 languages on Windows. Local AI works offline. EPUB, TXT, DOCX, HTML, CBZ, CBR, ZIP and PDF.">
+<link rel="preload" as="image" href="assets/app-home.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Literata:ital,opsz,wght@0,7..72,400;1,7..72,400&family=Noto+Sans+JP:wght@400;600;800&display=swap">
+<style>
+/* Layout: an Apple-style product story in the app's own colors. The app's painted night opens the page, then deep-navy pinned scenes where huge type and the product itself move with the scroll. */
+:root{
+  --night:#050a16;        /* ground, a shade deeper than the app's #070D1B */
+  --navy:#091326;         /* app sidebar */
+  --ink:#eaf0ff;          /* cool white text */
+  --mute:#93a3c4;         /* app nav grey-blue */
+  --hair:rgba(165,181,211,.16);
+  --champagne:#5aa0ff;    /* app accent (light) — kept name for cascade */
+  --acc:#3185ff;          /* app accent */
+  --acc-tx:#8fb5ff;       /* app accent text */
+  --violet:#8e9bff;       /* app tag violet */
+  --manga:#a46bff;        /* manga purple */
+  --gold:#f2a93b;         /* app Pro gold */
+  --glass:rgba(9,19,38,.45);
+  --font-display:"Poppins","Segoe UI",-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --font-ui:"IBM Plex Sans","Segoe UI",-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --font-read:"Literata",Georgia,serif;
+  --font-cjk:"Noto Sans JP","Yu Gothic","Microsoft YaHei","Malgun Gothic",sans-serif;
+  --metal:linear-gradient(100deg,#cfe0ff 0%,#5aa0ff 38%,#8e9bff 68%,#b98cff 100%);
+  --gut:max(16px,env(safe-area-inset-left,0px));
+  --gut-r:max(16px,env(safe-area-inset-right,0px));
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--night)}
+body{margin:0;background:var(--night);color:var(--ink);font-family:var(--font-ui);font-weight:300;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;margin:0;line-height:1.05;letter-spacing:-.035em;text-wrap:balance}
+em,.it{font-style:normal;font-family:var(--font-display);padding-right:.08em;margin-right:-.08em;background:var(--metal);-webkit-background-clip:text;background-clip:text;color:transparent}
+p{margin:0}
+:focus-visible{outline:1px solid var(--champagne);outline-offset:4px}
+.cjk{font-family:var(--font-cjk)}
+.wrap{width:100%;max-width:1280px;margin:0 auto;padding-left:clamp(16px,4vw,56px);padding-right:clamp(16px,4vw,56px)}
+.label{font:500 11px/1.4 var(--font-ui);letter-spacing:.24em;text-transform:uppercase;color:var(--mute)}
+.label.gold{color:var(--champagne)}
+main{overflow-x:clip}
+section{position:relative}
+
+/* ---------- glass ---------- */
+.glass{background:var(--glass);border:1px solid var(--hair);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%)}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;left:0;right:0;top:0;z-index:50;padding:calc(env(safe-area-inset-top,0px) + 22px) var(--gut-r) 18px var(--gut);transition:background .5s,padding .5s,border-color .5s;border-bottom:1px solid transparent}
+.nav.solid{background:rgba(5,10,22,.9);border-color:var(--hair);padding-top:calc(env(safe-area-inset-top,0px) + 12px);padding-bottom:12px}
+.nav-in{max-width:1280px;margin:0 auto;padding:0 clamp(0px,3vw,40px);display:flex;align-items:center;gap:28px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand img{width:38px;height:38px;border-radius:10px;box-shadow:0 6px 20px -6px rgba(164,107,255,.7)}
+.brand .nm{font:600 15px/1.1 var(--font-display);letter-spacing:-.01em;color:var(--ink);white-space:nowrap}
+.brand .nm small{display:block;font:500 9px/1.4 var(--font-ui);letter-spacing:.24em;color:var(--mute);text-transform:uppercase}
+.nav-links{display:flex;gap:30px;margin-left:auto}
+.nav-links a{font:400 11px var(--font-ui);letter-spacing:.24em;text-transform:uppercase;text-decoration:none;color:var(--ink);opacity:.82;position:relative;padding:6px 0}
+.nav-links a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--champagne);transform:scaleX(0);transform-origin:right;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.nav-links a:hover{opacity:1}.nav-links a:hover::after{transform:scaleX(1);transform-origin:left}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;font:400 11px/1 var(--font-ui);letter-spacing:.24em;text-transform:uppercase;text-decoration:none;padding:15px 26px;border:1px solid var(--hair);color:var(--ink);background:transparent;cursor:pointer;transition:background .4s,color .4s,border-color .4s;white-space:nowrap}
+.btn:hover{border-color:var(--champagne)}
+.btn-gold{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:500;box-shadow:0 10px 30px -10px rgba(49,133,255,.8)}
+.btn-gold:hover{background:var(--champagne)}
+.btn-store img{width:18px;height:18px}
+.btn-line{border-color:rgba(243,239,230,.5)}
+.nav .btn{padding:11px 18px}
+.menu-btn{display:none;width:44px;height:44px;border-radius:12px;border:1px solid var(--hair);background:rgba(255,255,255,.04);cursor:pointer;position:relative;flex:none}
+.menu-btn i{position:absolute;left:12px;right:12px;height:1.5px;background:var(--ink);border-radius:2px;transition:transform .35s cubic-bezier(.2,.7,.2,1),opacity .25s}
+.menu-btn i:nth-child(1){top:16px}.menu-btn i:nth-child(2){top:21px}.menu-btn i:nth-child(3){top:26px}
+.menu-open .menu-btn i:nth-child(1){transform:translateY(5px) rotate(45deg)}
+.menu-open .menu-btn i:nth-child(2){opacity:0}
+.menu-open .menu-btn i:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+.msheet{position:fixed;inset:0;z-index:45;background:rgba(5,10,22,.97);padding:calc(env(safe-area-inset-top,0px) + 96px) max(24px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 32px) max(24px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:4px;overflow-y:auto;opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s}
+.menu-open .msheet{opacity:1;visibility:visible}
+.msheet a:not(.btn){font:600 clamp(26px,7vw,34px)/1.2 var(--font-display);letter-spacing:-.02em;color:var(--ink);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--hair);display:flex;justify-content:space-between;align-items:center;translate:0 14px;opacity:0;transition:translate .5s cubic-bezier(.2,.7,.2,1),opacity .5s}
+.msheet a:not(.btn)::after{content:"→";font:400 20px var(--font-ui);color:var(--acc-tx)}
+.menu-open .msheet a:not(.btn){translate:0 0;opacity:1}
+.msheet a:nth-child(2){transition-delay:.03s}.msheet a:nth-child(3){transition-delay:.06s}.msheet a:nth-child(4){transition-delay:.09s}.msheet a:nth-child(5){transition-delay:.12s}.msheet a:nth-child(6){transition-delay:.15s}.msheet a:nth-child(7){transition-delay:.18s}
+.msheet a.small{font:500 15px var(--font-ui);color:var(--mute);border-bottom:0;margin-top:14px}
+.msheet .btn{margin-top:26px;justify-content:center}
+@media (max-width:900px){.nav-links{display:none}.nav .btn-line{margin-left:auto}.menu-btn{display:block}}
+@media (max-width:420px){.nav .btn-line{display:none}.menu-btn{margin-left:auto}}
+
+/* ---------- hero ---------- */
+.hero{min-height:max(100svh,600px);padding-top:96px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
+.scene{position:absolute;inset:0;transform-origin:60% 60%}
+.scene img{position:absolute;inset:-6% 0;width:100%;height:112%;object-fit:cover;object-position:62% 50%}
+.scene .fill{display:none}
+@media (max-width:700px){
+  .scene .fill{display:block;filter:blur(28px) saturate(1.2);opacity:.55;transform:scale(1.2)}
+  .scene #heroImg{inset:calc(env(safe-area-inset-top,0px) + 64px) 0 auto 0;height:auto;aspect-ratio:2576/1438;object-fit:contain;-webkit-mask-image:linear-gradient(180deg,#000 75%,transparent);mask-image:linear-gradient(180deg,#000 75%,transparent)}
+  .hero-shade{background:linear-gradient(0deg,var(--night) 0%,rgba(5,10,22,.75) 45%,rgba(5,10,22,.2) 75%)}
+}
+.hero-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,10,22,.85) 0%,rgba(5,10,22,.45) 42%,rgba(5,10,22,0) 68%),linear-gradient(0deg,var(--night) 0%,rgba(5,10,22,0) 40%),linear-gradient(180deg,rgba(5,10,22,.6),rgba(5,10,22,0) 22%)}
+.hero-copy{position:relative;z-index:2;padding-bottom:clamp(26px,5vh,54px)}
+.hero h1{font-size:clamp(44px,min(8.4vw,11vh),128px);max-width:10ch}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+.hero h1 .ln>span{display:inline-block}
+.hero h1 em{font-weight:600}
+.hero .kicker{margin-top:26px;display:grid;gap:4px}
+.hero .kicker span{font:400 11px/1.6 var(--font-ui);letter-spacing:.3em;text-transform:uppercase;color:var(--ink);opacity:.85}
+.bar-row{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-top:clamp(28px,5vh,48px)}
+.launch{display:flex;flex-direction:column;gap:18px;min-width:0}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap}
+.btn-film{gap:14px}
+.btn-film i{width:26px;height:26px;margin:-6px 0;border-radius:50%;border:1px solid rgba(255,255,255,.35);display:grid;place-items:center;font-style:normal;font-size:9px;padding-left:2px}
+.btn-film:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.35)}
+.caps{display:grid;grid-template-columns:repeat(4,auto);border-radius:18px;overflow:hidden;max-width:820px}
+.cap{position:relative;padding:16px 26px 16px 22px;display:flex;align-items:center;gap:14px;min-width:0}
+.cap+.cap{border-left:1px solid var(--hair)}
+.cap b{font:600 26px/1 var(--font-display);letter-spacing:-.03em;background:var(--metal);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.08em}
+.cap svg{width:24px;height:24px;flex:none;stroke:var(--acc-tx);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.cap span{font:400 12.5px/1.35 var(--font-ui);color:var(--mute);white-space:nowrap}
+.cap span strong{display:block;font-weight:500;color:var(--ink);font-size:13.5px}
+.cap.pro b{background:linear-gradient(180deg,#ffd58a,#f2a93b);-webkit-background-clip:text;background-clip:text}
+.scroll-cue{display:flex;align-items:center;gap:14px;text-decoration:none;font:400 10.5px var(--font-ui);letter-spacing:.26em;text-transform:uppercase;white-space:nowrap}
+.scroll-cue i{width:42px;height:42px;border:1px solid var(--hair);border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:14px}
+@media (max-width:900px){.scroll-cue{display:none}.caps{grid-template-columns:1fr 1fr}.cap{padding:14px 16px}.cap:nth-child(3){border-left:0}.cap:nth-child(n+3){border-top:1px solid var(--hair)}.cap b{font-size:22px}.cap svg{width:20px;height:20px}.cap span{white-space:normal;font-size:11.5px}.cap span strong{font-size:12.5px}.cta-row .btn{flex:1 1 100%}}
+
+/* ---------- intro statement ---------- */
+.intro{padding-block:clamp(110px,16vw,200px)}
+.intro-grid{display:grid;grid-template-columns:200px 1fr;gap:40px}
+.statement{font:600 clamp(30px,4.4vw,62px)/1.12 var(--font-display);letter-spacing:-.035em;max-width:22ch}
+.statement .w{opacity:.16;transition:none}
+.statement em{color:transparent}
+.intro-meta{display:flex;gap:48px;margin-top:64px;flex-wrap:wrap}
+.stat b{display:block;font:600 clamp(44px,5vw,64px)/1 var(--font-display);letter-spacing:-.04em}
+.stat span{display:block;margin-top:10px}
+@media (max-width:800px){.intro-grid{grid-template-columns:1fr;gap:18px}}
+
+/* ---------- expanding screenshot ---------- */
+.reveal-shot{height:100vh;display:grid;place-items:center;overflow:hidden}
+.shot-frame{position:relative;width:100%;height:100%;clip-path:inset(18% 24% 18% 24%);will-change:clip-path}
+.shot-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%;transform:scale(1.25)}
+.shot-cap{position:absolute;left:0;right:0;bottom:clamp(20px,5vh,48px);text-align:center;z-index:2}
+.shot-cap h2{font-size:clamp(34px,5vw,72px)}
+.shot-cap h2 em{color:transparent}
+.shot-shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(8,10,23,.92),rgba(8,10,23,0) 45%)}
+
+/* ---------- giant words ---------- */
+.words{height:100vh;display:grid;place-items:center;overflow:hidden;background:var(--night)}
+.words .wd{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 clamp(72px,17vw,280px)/1.25 var(--font-display);letter-spacing:-.06em;opacity:0;white-space:nowrap}
+.words .wd:nth-child(3) span{display:inline-block;padding:0 .08em .2em;margin-bottom:-.2em;background:var(--metal);-webkit-background-clip:text;background-clip:text;color:transparent}
+.words .sub{position:absolute;bottom:12vh;left:0;right:0;text-align:center}
+
+/* ---------- laptop ---------- */
+.mac{height:100vh;overflow:hidden;background:var(--night);display:grid;place-items:center}
+.mac-head{position:absolute;top:14vh;left:0;right:0;text-align:center;z-index:2;padding-inline:16px}
+.mac-head h2{font-size:clamp(36px,min(6vw,9vh),88px);margin-top:14px}
+.mac-stage{perspective:2200px;width:min(1040px,88vw);margin-top:18vh}
+@media (min-width:701px){.mac{align-content:end;padding-bottom:3vh}.mac-stage{margin-top:0;width:min(1040px,88vw,calc((72vh - 110px)*1.69))}}
+.laptop{transform-style:preserve-3d;transform-origin:50% 80%}
+.lid{position:relative;transform-origin:50% 100%;transform-style:preserve-3d;border-radius:20px 20px 6px 6px;background:linear-gradient(180deg,#2b2b30,#141417);padding:1.3%;box-shadow:0 0 0 1px rgba(255,255,255,.08) inset}
+.lid .screen{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px 12px 2px 2px;overflow:hidden;background:#05050a}
+.lid .screen img{display:block;width:100%;height:100%;object-fit:contain}
+.mac-full{position:absolute;inset:84px 3vw 4vh;display:grid;place-items:center;opacity:0;pointer-events:none;z-index:3}
+.mac-full img{display:block;width:min(100%,calc((100vh - 84px - 4vh)*16/9));height:auto;aspect-ratio:16/9;border-radius:14px;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 40px 120px -30px rgba(49,133,255,.55)}
+@media (max-width:700px){.mac-full{inset:72px 4vw 0}.mac-full img{width:min(100%,calc((100vh - 72px)*16/9))}}
+.lid .screen::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.10),transparent 35%)}
+.lid .notch{position:absolute;top:1.3%;left:50%;width:9%;height:2.4%;transform:translateX(-50%);background:#0b0b0e;border-radius:0 0 8px 8px;z-index:2}
+.lid .back{position:absolute;inset:0;border-radius:inherit;background:linear-gradient(160deg,#cfd0d6,#8d8f98 60%,#6c6e77);transform:rotateY(180deg) translateZ(1px);backface-visibility:hidden;display:grid;place-items:center}
+.lid .back::before{content:"訳";font:600 clamp(30px,5vw,64px)/1 var(--font-cjk);color:rgba(255,255,255,.55)}
+.lid .front{backface-visibility:hidden;width:100%}
+.base{position:relative;height:clamp(10px,1.6vw,18px);margin:0 -7%;border-radius:2px 2px 22px 22px;background:linear-gradient(180deg,#d9dae0 0%,#9c9ea7 45%,#55575f 100%)}
+.base::before{content:"";position:absolute;left:50%;top:0;width:14%;height:45%;transform:translateX(-50%);background:linear-gradient(180deg,#7b7d86,#a9abb3);border-radius:0 0 10px 10px}
+.mac-shadow{height:40px;margin:-6px -4% 0;background:radial-gradient(closest-side,rgba(90,160,255,.35),transparent);filter:blur(12px)}
+
+/* ---------- engine chip ---------- */
+.engine{min-height:100vh;display:grid;place-items:center;text-align:center;background:var(--night);padding-block:120px;overflow:hidden}
+.chip-wrap{position:relative;width:clamp(220px,30vw,360px);aspect-ratio:1;margin:0 auto}
+.chipx{position:absolute;inset:0;border-radius:22%;background:linear-gradient(145deg,#1b1b22,#0a0a0d);box-shadow:0 0 0 1px rgba(255,255,255,.1) inset,0 0 140px -20px rgba(90,160,255,.55);display:grid;place-items:center;overflow:hidden}
+.chipx::before{content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;background:var(--metal);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.chipx .sweep{position:absolute;inset:-50%;background:linear-gradient(115deg,transparent 40%,rgba(255,240,215,.22) 50%,transparent 60%);transform:translateX(-60%)}
+.chipx .in{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center}
+.chip-name{font:600 clamp(13px,1.5vw,17px)/1.2 var(--font-display);letter-spacing:-.01em;color:var(--ink)}
+.chip-logo{width:56%;height:auto;aspect-ratio:1/1;object-fit:contain;border-radius:22%;box-shadow:0 20px 50px -14px rgba(164,107,255,.7)}
+.chipx .in .k{font:800 clamp(52px,7vw,92px)/1 var(--font-cjk);background:var(--metal);-webkit-background-clip:text;background-clip:text;color:transparent}
+.chipx .in small{display:block;margin-top:12px}
+.pins{position:absolute;inset:-9%;pointer-events:none}
+.pins i{position:absolute;background:linear-gradient(90deg,rgba(90,160,255,0),rgba(90,160,255,.6));height:1px;width:22%}
+.engine h2{font-size:clamp(40px,6vw,92px);margin-top:70px}
+.engine .lead{color:var(--mute);margin:24px auto 0;max-width:46ch;font-size:clamp(17px,1.6vw,21px)}
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,4vw,60px);max-width:1000px;margin:clamp(60px,8vw,100px) auto 0;text-align:left;border-top:1px solid var(--hair);padding-top:34px}
+.nums b{display:block;font:600 clamp(48px,6.4vw,96px)/1 var(--font-display);letter-spacing:-.05em}
+.nums span{display:block;color:var(--mute);margin-top:12px;font-size:15px;max-width:24ch}
+@media (max-width:700px){.nums{grid-template-columns:1fr}}
+
+/* ---------- chapter heads ---------- */
+.chap{padding-block:clamp(100px,14vw,180px)}
+.head{display:grid;grid-template-columns:200px 1fr;gap:40px;align-items:start}
+.head h2{font-size:clamp(38px,5.2vw,76px)}
+.head h2 em{color:transparent}
+.head p{margin-top:28px;color:var(--mute);max-width:52ch;font-size:17px}
+@media (max-width:800px){.head{grid-template-columns:1fr;gap:16px}}
+
+/* ---------- collections ---------- */
+.coll{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(20px,3vw,40px);margin-top:clamp(60px,8vw,110px);align-items:end}
+.c-img{position:relative;overflow:hidden;aspect-ratio:16/9;max-width:100%;border-radius:24px;background:var(--navy)}
+.c-img img,.c-img video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.c-ic{width:56px;height:56px;border-radius:16px;grid-row:span 3;box-shadow:0 10px 30px -10px rgba(90,160,255,.6)}
+.c-img::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px var(--hair)}
+.c-a{grid-column:1/7}.c-b{grid-column:7/13;margin-bottom:clamp(60px,10vw,140px)}
+.c-txt{margin-top:26px;display:grid;grid-template-columns:auto 1fr;gap:6px 22px;align-items:baseline}
+
+.c-txt h3{font-size:clamp(32px,3.4vw,46px)}
+.c-txt p{color:var(--mute);max-width:40ch}
+.c-txt .fm{margin-top:6px}
+@media (max-width:800px){.c-a,.c-b{grid-column:1/-1;margin-bottom:0}}
+
+/* ---------- atelier (manga scene) ---------- */
+.atelier{min-height:100vh;display:grid;align-items:center;padding-block:80px}
+.at-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,6vw,100px);align-items:center}
+.at-grid h2{font-size:clamp(40px,5.4vw,80px)}
+.at-grid h2 em{color:transparent}
+.at-grid p{color:var(--mute);margin-top:24px;max-width:44ch;font-size:17px}
+.steps{list-style:none;padding:0;margin:36px 0 0;border-top:1px solid var(--hair)}
+.steps li{display:grid;grid-template-columns:44px 1fr auto;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--hair);color:var(--mute);transition:color .4s}
+.steps li .n{font:500 15px/1 var(--font-ui)}
+.steps li .st{font:400 10px var(--font-ui);letter-spacing:.22em;text-transform:uppercase;opacity:0;transition:opacity .4s;color:var(--champagne)}
+.steps li.on{color:var(--ink)}.steps li.on .st{opacity:1}
+.page{position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:24px;background:#0d0f24;box-shadow:0 0 0 1px var(--hair),0 40px 90px -30px rgba(0,0,0,.8)}
+.page .art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:42% 40%}
+.page .tone{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,10,23,0) 45%,rgba(8,10,23,.6))}
+.bubble{position:absolute;background:#fbf9f3;color:#16131f;border-radius:50%;display:grid;place-items:center;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:8px}
+.bubble::after{content:"";position:absolute;width:16px;height:16px;background:#fbf9f3;bottom:-5px;left:30%;transform:rotate(35deg);border-radius:2px}
+.bubble .jp{font-family:var(--font-cjk);font-weight:600;writing-mode:vertical-rl;font-size:clamp(14px,1.6vw,19px);line-height:1.25}
+.bubble .en{position:absolute;inset:0;display:grid;place-items:center;padding:14%;font:700 clamp(11px,1.3vw,15px)/1.15 var(--font-display);letter-spacing:-.02em;opacity:0}
+.b1{left:7%;top:6%;width:30%;aspect-ratio:1/1.15}
+.b2{right:6%;top:30%;width:28%;aspect-ratio:1/1.2}.b2::after{left:auto;right:30%}
+.b3{left:12%;bottom:12%;width:34%;aspect-ratio:1.15/1}
+.box{position:absolute;border:1px solid var(--champagne);opacity:0;pointer-events:none}
+.box span{position:absolute;top:-22px;left:-1px;font:500 9px/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;background:var(--champagne);color:#04122b;padding:6px 7px;white-space:nowrap}
+.scan{position:absolute;left:0;right:0;height:140px;top:-140px;background:linear-gradient(180deg,transparent,rgba(90,160,255,.2) 80%,rgba(170,205,255,.9) 100%);mix-blend-mode:screen;pointer-events:none}
+.hud{position:absolute;left:18px;right:18px;bottom:18px;display:flex;justify-content:space-between;gap:10px;padding:11px 14px;font:400 10px var(--font-ui);letter-spacing:.2em;text-transform:uppercase}
+@media (max-width:900px){
+  .at-grid{grid-template-columns:1fr;gap:14px}
+  .atelier{min-height:100svh;padding-block:calc(env(safe-area-inset-top,0px) + 74px) 16px;align-items:start}
+  .at-grid h2{font-size:clamp(28px,8vw,40px);margin-top:8px!important}
+  .at-grid p{display:none}
+  .steps{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:6px;border-top:0}
+  .steps li{grid-template-columns:24px 1fr;padding:7px 10px;border:1px solid var(--hair);border-radius:10px;font-size:12.5px;line-height:1.3}
+  .steps li .st{display:none}
+  .steps li .n{font-size:11px}
+  .steps li.on{border-color:var(--champagne);background:rgba(49,133,255,.12)}
+  .page{width:min(100%,calc((100svh - 330px) * .8));margin:0 auto}
+  .hud{left:10px;right:10px;bottom:10px;padding:8px 10px;font-size:9px}
+}
+
+/* ---------- sentence morph ---------- */
+.morph{min-height:100vh;display:grid;place-items:center;text-align:center;padding-block:80px}
+.morph-in{max-width:1000px;width:100%}
+.morph-stack{position:relative;min-height:3.2em;margin-top:36px;font-size:clamp(28px,4.6vw,64px);line-height:1.2}
+.morph-src,.morph-dst{position:absolute;inset:0;display:flex;flex-wrap:wrap;justify-content:center;align-content:center}
+.morph-src{font-family:var(--font-cjk);font-weight:400;letter-spacing:.04em}
+.morph-dst{font-family:var(--font-read);font-weight:400;letter-spacing:-.01em;gap:0 .26em}
+.morph-dst span{opacity:0}
+.morph-line{height:1px;background:var(--hair);max-width:360px;margin:40px auto 0;position:relative}
+.morph-line i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--champagne)}
+.morph-foot{margin-top:18px}
+
+/* ---------- features list ---------- */
+/* features: bento of quiet cards */
+.feats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:clamp(48px,6vw,80px)}
+.fc{position:relative;padding:30px 28px 28px;border-radius:24px;background:linear-gradient(180deg,rgba(20,34,62,.55),rgba(9,19,38,.55));border:1px solid var(--hair);overflow:hidden;min-width:0;transition:translate .5s cubic-bezier(.2,.7,.2,1),border-color .4s,box-shadow .5s}
+.fc::before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(420px 260px at var(--fx,50%) var(--fy,0%),rgba(90,160,255,.16),transparent 65%);opacity:0;transition:opacity .4s;pointer-events:none}
+.fc:hover{translate:0 -4px;border-color:rgba(90,160,255,.45);box-shadow:0 30px 60px -30px rgba(49,133,255,.55)}
+.fc:hover::before{opacity:1}
+.fc.wide{grid-column:span 2}
+.fc .ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,rgba(90,160,255,.22),rgba(164,107,255,.18));border:1px solid rgba(143,181,255,.28);margin-bottom:22px}
+.fc .ic svg{width:22px;height:22px;fill:none;stroke:var(--acc-tx);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.fc h3{font-size:22px;letter-spacing:-.02em;line-height:1.2;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fc h3 .pro{margin-left:0}
+.fc p{color:var(--mute);margin-top:10px;font-size:15px;line-height:1.6;max-width:52ch}
+.fc .ex{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+.fc .ex span{font-size:13px;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid var(--hair);color:var(--ink)}
+.fc .live{margin-top:20px;display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center}
+.fc .live div{padding:14px 16px;border-radius:14px;background:rgba(5,10,22,.6);border:1px solid var(--hair);font-size:14px;min-width:0}
+.fc .live small{display:block;font:500 10px var(--font-mono);letter-spacing:.12em;color:var(--mute);margin-bottom:6px}
+.fc .live .sel{outline:1.5px dashed rgba(143,181,255,.8);outline-offset:3px;border-radius:3px}
+.fc .live b{color:var(--acc-tx);font-weight:500}
+@media (max-width:980px){.feats{grid-template-columns:1fr 1fr}.fc.wide{grid-column:1/-1}}
+@media (max-width:640px){.feats{grid-template-columns:1fr}.fc .live{grid-template-columns:1fr}.fc .live b{justify-self:center;rotate:90deg}}
+
+/* ---------- gallery ---------- */
+/* ---------- film (YouTube) ---------- */
+.film-frame{position:relative;margin-top:clamp(44px,6vw,80px);aspect-ratio:16/9;max-width:100%;border-radius:28px;overflow:hidden;background:var(--navy);box-shadow:0 0 0 1px var(--hair),0 60px 120px -40px rgba(49,133,255,.45)}
+.film-frame img,.film-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover}
+.film-frame .shade{position:absolute;inset:0;background:radial-gradient(closest-side,rgba(5,10,22,.15),rgba(5,10,22,.7))}
+.film-play{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;color:var(--ink);text-decoration:none;background:none;border:0;cursor:pointer;font:inherit;width:100%}
+.film-play i{width:clamp(72px,9vw,104px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.14);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.3);transition:transform .4s,background .4s}
+.film-play i svg{width:34%;height:34%;margin-left:6%;fill:#fff}
+.film-play:hover i{transform:scale(1.08);background:var(--acc)}
+.film-note{margin-top:16px}
+.gallery{overflow:hidden}
+.gal-bg{position:absolute;inset:0;z-index:-1;overflow:hidden}
+.gal-bg img{width:100%;height:100%;object-fit:cover;opacity:.45}
+.gal-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--night),rgba(5,10,22,.4) 30%,rgba(5,10,22,.55) 70%,var(--night))}
+.gal-pin{position:relative;isolation:isolate}
+.gal-pin{min-height:100vh;display:flex;flex-direction:column;justify-content:center;gap:56px;padding-block:80px}
+.shelf{display:flex;gap:28px;width:max-content;will-change:transform;backface-visibility:hidden;transform:translate3d(0,0,0);padding-left:max(clamp(16px,4vw,56px),calc((100vw - 1280px)/2 + 56px))}
+.book{width:clamp(160px,17vw,230px);flex:none;contain:layout paint}
+.book:nth-child(even){margin-top:60px}
+.book .cv{aspect-ratio:2/3;overflow:hidden;border-radius:16px;box-shadow:0 0 0 1px var(--hair),0 16px 36px -18px rgba(0,0,0,.75);transform:translateZ(0)}
+.book .cv img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.book:hover .cv img{transform:scale(1.06)}
+.book .cv{position:relative}
+.book .cv::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,10,22,0) 45%,rgba(5,10,22,.85));pointer-events:none}
+.book .ttl{position:absolute;left:8%;right:8%;bottom:13%;z-index:1;text-align:center;font:700 clamp(20px,2.1vw,30px)/1.15 var(--font-display);color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.8);text-wrap:balance}
+.book .ttl.cjk{font-family:var(--font-cjk);font-weight:800}
+.book .fm{position:absolute;right:8px;bottom:8px;z-index:1;font:600 9px/1 var(--font-mono);letter-spacing:.06em;color:#fff;background:rgba(0,0,0,.55);padding:4px 6px;border-radius:5px}
+.book .bar{display:block;height:3px;border-radius:3px;background:rgba(255,255,255,.1);margin-top:10px;overflow:hidden}
+.book .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--manga))}
+.book .t{margin-top:14px;font:400 15px/1.3 var(--font-cjk)}
+.book .m{margin-top:4px}
+
+/* ---------- languages ---------- */
+.langs{display:flex;flex-wrap:wrap;align-items:baseline;gap:clamp(14px,2.4vw,34px) clamp(20px,3vw,44px);margin-top:clamp(50px,7vw,90px);font:600 clamp(28px,4vw,56px)/1.1 var(--font-display);letter-spacing:-.02em;color:rgba(234,240,255,.35)}
+.langs span{transition:color .4s}.langs span:hover{color:var(--ink)}
+.langs .cj{font-family:var(--font-cjk)}
+.langs .to{font-family:var(--font-display);background:var(--metal);-webkit-background-clip:text;background-clip:text;color:transparent}
+.langs .ar{font:300 clamp(28px,3vw,44px)/1 var(--font-ui);color:var(--mute)}
+.langs small{display:block;font:400 10px var(--font-ui);letter-spacing:.28em;color:var(--mute);margin-top:12px}
+
+/* ---------- pricing ---------- */
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:clamp(50px,7vw,90px);border:1px solid var(--hair)}
+.plan{padding:clamp(28px,4vw,56px);display:flex;flex-direction:column;gap:26px}
+.plan+.plan{border-left:1px solid var(--hair)}
+.plan.pro-plan{background:linear-gradient(160deg,rgba(242,169,59,.12),rgba(142,155,255,.06) 60%,transparent)}
+.plan h3{font-size:clamp(40px,4vw,56px)}
+.price{font:400 18px var(--font-ui);color:var(--mute)}
+.price b{font:600 56px/1 var(--font-display);letter-spacing:-.04em;color:var(--ink)}
+.plan ul{list-style:none;padding:0;margin:0;border-top:1px solid var(--hair)}
+.plan li{padding:12px 0;border-bottom:1px solid var(--hair);color:var(--mute);font-size:15px}
+.plan li b{font-weight:400;color:var(--ink)}
+.plan .btn{margin-top:auto}
+.draft{display:inline-block;margin-top:24px;font:400 11px var(--font-ui);letter-spacing:.12em;color:var(--gold);border:1px dashed rgba(242,169,59,.5);padding:7px 11px}
+@media (max-width:760px){.plans{grid-template-columns:1fr}.plan+.plan{border-left:0;border-top:1px solid var(--hair)}}
+
+/* ---------- closing ---------- */
+.closing{position:relative;overflow:hidden;padding-block:clamp(140px,20vw,260px);text-align:center}
+.closing .bg{position:absolute;inset:-10% 0;background:url("assets/app/banner-pagoda.webp") 70% 50%/cover;opacity:.7}
+.closing .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--night) 0%,rgba(8,10,23,.35) 40%,rgba(8,10,23,.35) 60%,var(--night) 100%)}
+.closing h2{position:relative;font-size:clamp(48px,8vw,124px)}
+.closing h2 em{color:transparent}
+.closing p{position:relative;color:var(--ink);opacity:.8;margin:26px auto 0;max-width:48ch;font-size:17px}
+.closing .acts{position:relative;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:40px}
+
+footer{padding-block:56px 40px}
+.foot{display:grid;grid-template-columns:1fr auto;gap:24px;border-top:1px solid var(--hair);padding-top:32px;align-items:center}
+.foot nav{display:flex;gap:26px;flex-wrap:wrap}
+.foot .by{display:flex;align-items:center;gap:12px}.foot .by img{width:34px;height:34px;border-radius:9px;background:#fff}
+.foot a{text-decoration:none}.foot a:hover{color:var(--ink)}
+@media (max-width:700px){.foot{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.words{height:auto;padding-block:120px;display:flex;flex-direction:column;gap:10px}.words .wd,.words .sub{position:static;opacity:1}.statement .w{opacity:1}.morph-dst span,.bubble .en{opacity:1}.bubble .jp,.morph-src{opacity:0}.shot-frame{clip-path:none}}
+</style>
+
+<header class="nav" id="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top" aria-label="Novel &amp; Manga Translator home"><img src="assets/app/logo-256.webp" alt="" width="38" height="38"><span class="nm">Novel &amp; Manga<small>Translator</small></span></a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#collections">Collections</a>
+      <a href="#atelier">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#film">Video</a>
+      <a href="#gallery">Library</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <a class="btn btn-line" href="#download">Download</a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="msheet"><i></i><i></i><i></i></button>
+  </div>
+
+</header>
+  <nav class="msheet" id="msheet" aria-label="Menu">
+    <a href="#collections">Collections</a>
+    <a href="#atelier">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#film">Video</a>
+    <a href="#gallery">Library</a>
+    <a href="#pricing">Pricing</a>
+    <a class="small" href="privacy.html">Privacy</a>
+    <a class="btn btn-gold" href="#download">Get it from Microsoft Store</a>
+  </nav>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="scene" id="scene" aria-hidden="true">
+      <img class="fill" src="assets/app/hero-castle.webp" alt="">
+      <img id="heroImg" src="assets/app/hero-castle.webp" alt="" width="2576" height="1438">
+    </div>
+    <div class="hero-shade"></div>
+    <div class="wrap hero-copy">
+      <h1>
+        <span class="ln"><span>Every story</span></span>
+        <span class="ln"><span><em>beautifully</em></span></span>
+        <span class="ln"><span>in your</span></span>
+        <span class="ln"><span>language</span></span>
+      </h1>
+      <div class="kicker">
+        <span>Novels, light novels &amp; manga</span>
+        <span>For Windows 10 &amp; 11 · On the Microsoft Store</span>
+      </div>
+      <div class="bar-row">
+        <div class="launch" id="launch">
+          <div class="cta-row">
+            <a class="btn btn-gold btn-store" href="#download"><img src="assets/app/microsoft-store.svg" alt="">Get it from Microsoft Store</a>
+            <a class="btn glass btn-film" href="#film"><i>▶</i>Watch the film</a>
+          </div>
+          <div class="caps glass" aria-label="At a glance">
+            <div class="cap"><b>22</b><span><strong>Languages</strong>any direction</span></div>
+            <div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H12v17H6.5A2.5 2.5 0 0 0 4 22.5z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H12v17h5.5a2.5 2.5 0 0 1 2.5 2.5z"/></svg><span><strong>Novels &amp; manga</strong>EPUB · CBZ · PDF</span></div>
+            <div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg><span><strong>Local AI</strong>works fully offline</span></div>
+            <div class="cap pro"><b>Free</b><span><strong>Pro once</strong>no subscription</span></div>
+          </div>
+        </div>
+        <a class="scroll-cue" href="#intro">Scroll to explore <i>↓</i></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- GIANT WORDS -->
+  <section class="words" id="words" aria-label="Translate, explore, enjoy">
+    <span class="wd">Translate</span>
+    <span class="wd">Explore</span>
+    <span class="wd"><span>Enjoy</span></span>
+    <p class="label sub">Novels &amp; manga · On your computer</p>
+  </section>
+
+  <!-- INTRO STATEMENT -->
+  <section class="intro" id="intro">
+    <div class="wrap intro-grid">
+      <span class="label gold">The app</span>
+      <div>
+        <p class="statement" id="statement">Every story you have wanted to read, in the language you read best. Novels, web novels and manga, translated <em>page by page</em> on your own PC, with a Local AI that works without internet.</p>
+        <div class="intro-meta">
+          <div class="stat"><b>22</b><span class="label">Translation languages</span></div>
+          <div class="stat"><b>22</b><span class="label">Interface languages</span></div>
+          <div class="stat"><b class="it">Offline</b><span class="label">Local AI on your PC</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAPTOP -->
+  <section class="mac" id="mac">
+    <div class="mac-head" id="macHead">
+      <span class="label gold">Inside the app</span>
+      <h2>Your whole library <em>One window</em></h2>
+    </div>
+    <div class="mac-stage">
+      <div class="laptop" id="laptop">
+        <div class="lid" id="lid">
+          <div class="front"><div class="screen"><img src="assets/app-home.webp" alt="The app's home screen with novel and manga translation, a library of covers and recent jobs" width="1920" height="1080"></div></div>
+          <span class="notch"></span>
+          <div class="back"></div>
+        </div>
+        <div class="base"></div>
+        <div class="mac-shadow"></div>
+      </div>
+    </div>
+    <div class="mac-full" id="macFull"><img src="assets/app-home.webp" alt="" aria-hidden="true" width="1920" height="1080" decoding="async"></div>
+  </section>
+
+  <!-- COLLECTIONS -->
+  <section class="chap" id="collections">
+    <div class="wrap">
+      <div class="head rv">
+        <span class="label gold">Collections</span>
+        <div>
+          <h2>Two crafts <em>one</em> library</h2>
+          <p>Prose and panels ask for different tools. Both live side by side and share the same shelf.</p>
+        </div>
+      </div>
+      <div class="coll">
+        <article class="c-a">
+          <div class="c-img"><video class="px" autoplay muted loop playsinline preload="metadata" poster="assets/video/novel-card-poster.webp" aria-label="Novel Translation artwork, animated"><source src="assets/video/novel-card.webm" type="video/webm"><source src="assets/video/novel-card.mp4" type="video/mp4"></video></div>
+          <div class="c-txt">
+            <img class="c-ic" src="assets/app/novel-icon.webp" alt="" width="56" height="56">
+            <h3>Novel translation</h3>
+            <p>Light novels, web novels and books. Chapters keep their order and images. Read the original, the translation or both side by side.</p>
+            <span class="label fm">EPUB · TXT · DOCX · HTML</span>
+          </div>
+        </article>
+        <article class="c-b">
+          <div class="c-img"><video class="px" autoplay muted loop playsinline preload="metadata" poster="assets/video/manga-card-poster.webp" aria-label="Manga Translation artwork, animated"><source src="assets/video/manga-card.webm" type="video/webm"><source src="assets/video/manga-card.mp4" type="video/mp4"></video></div>
+          <div class="c-txt">
+            <img class="c-ic" src="assets/app/manga-icon.webp" alt="" width="56" height="56">
+            <h3>Manga translation</h3>
+            <p>Manga, manhwa and comics. Bubbles are found, read, cleaned and lettered in your language, right to left when the book is.</p>
+            <span class="label fm">CBZ · CBR · ZIP · PDF · Image folders</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ATELIER: MANGA -->
+  <section class="atelier" id="atelier">
+    <div class="wrap at-grid">
+      <div>
+        <span class="label gold">The atelier</span>
+        <h2 style="margin-top:20px">Every bubble <em>rewritten</em></h2>
+        <p>Open a chapter. PaddleOCR and Manga OCR read every bubble, even vertical Japanese. The app cleans the art and letters the translation back into the panel. Your original file never changes.</p>
+        <ol class="steps" id="steps">
+          <li class="on"><span class="n">01</span>Open chapter, 24 pages<span class="st">Now</span></li>
+          <li><span class="n">02</span>Detect speech bubbles<span class="st">Now</span></li>
+          <li><span class="n">03</span>Read the Japanese<span class="st">Now</span></li>
+          <li><span class="n">04</span>Clean &amp; letter<span class="st">Now</span></li>
+        </ol>
+      </div>
+      <div class="page" id="page">
+        <img class="art" src="assets/app/dragon.webp" alt="" aria-hidden="true">
+        <div class="tone"></div>
+        <div class="bubble b1"><span class="jp">待って！</span><span class="en">Wait!</span></div>
+        <div class="bubble b2"><span class="jp">ここは…どこ？</span><span class="en">Where… am I?</span></div>
+        <div class="bubble b3"><span class="jp">星が見える丘だよ</span><span class="en">The hill where the stars can be seen.</span></div>
+        <div class="box" data-for="b1"><span>Bubble 1 · 98%</span></div>
+        <div class="box" data-for="b2"><span>Bubble 2 · 97%</span></div>
+        <div class="box" data-for="b3"><span>Bubble 3 · 99%</span></div>
+        <div class="scan" id="scan"></div>
+        <div class="hud glass"><span>Page 12 / 24</span><span id="hudR">Ready</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MORPH: NOVEL -->
+  <section class="morph" id="morph">
+    <div class="wrap morph-in">
+      <span class="label gold">星の見える丘 · Chapter III · JA → EN</span>
+      <div class="morph-stack" aria-label="Sample sentence translated from Japanese to English">
+        <div class="morph-src" id="morphSrc">星が見える丘で、彼女は最後の灯りを待っていた。</div>
+        <div class="morph-dst" id="morphDst">On the hill where the stars could be seen, she waited for the last light.</div>
+      </div>
+      <div class="morph-line"><i id="morphBar"></i></div>
+      <p class="label morph-foot" id="morphPct">0% translated</p>
+    </div>
+  </section>
+
+  <!-- ENGINE -->
+  <section class="engine" id="engine">
+    <div class="wrap">
+      <div class="chip-wrap" id="chip">
+        <div class="pins" aria-hidden="true">
+          <i style="left:-14%;top:30%"></i><i style="left:-14%;top:50%"></i><i style="left:-14%;top:70%"></i>
+          <i style="right:-14%;top:30%;transform:scaleX(-1)"></i><i style="right:-14%;top:50%;transform:scaleX(-1)"></i><i style="right:-14%;top:70%;transform:scaleX(-1)"></i>
+        </div>
+        <div class="chipx"><div class="sweep" id="sweep"></div><div class="in"><img class="chip-logo" src="assets/app/logo-512.webp" alt="Novel &amp; Manga Translator logo" width="512" height="512"><span class="chip-name">Novel &amp; Manga<br>Translator</span></div></div>
+      </div>
+      <h2 class="eng-h">Local AI <em>No internet needed</em></h2>
+      <p class="lead">The translation model and the text recognition models come inside the app. Chapters are translated on your own PC, with names and honorifics kept consistent.</p>
+      <div class="nums">
+        <div><b data-count="22">0</b><span>languages, translated in any direction</span></div>
+        <div><b data-count="3">0</b><span>engines compared side by side on one paragraph</span></div>
+        <div><b data-count="0" data-from="100">100</b><span>internet needed with Local AI</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="chap" id="features">
+    <div class="wrap">
+      <div class="head rv">
+        <span class="label gold">Features</span>
+        <div><h2>Made for people who <em>read a lot</em></h2></div>
+      </div>
+      <div class="feats">
+        <article class="fc wide"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 8h5M7 11h8"/></svg></span><span class="label">Live screen</span><h3 style="margin-top:8px">Translate what's on screen</h3><p>Draw a box over any app or browser and the translation appears on top, once or continuously. Works for novels and manga, with hotkeys even while the app is minimized.</p>
+          <div class="live"><div><small>YOUR SCREEN</small><span class="cjk sel">魔導書は、まだ眠っている。</span></div><b>→</b><div><small>OVERLAY</small>The grimoire is still asleep.</div></div></article>
+        <article class="fc"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 5c3-1.5 6-1.5 10 1 4-2.5 7-2.5 10-1v14c-3-1.5-6-1.5-10 1-4-2.5-7-2.5-10-1z"/><path d="M12 6v14"/></svg></span><span class="label">Reader</span><h3 style="margin-top:8px">Read it your way</h3><p>Original, translation or bilingual. Dark, Sepia or Light, and it remembers the exact paragraph you stopped at.</p></article>
+        <article class="fc"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg></span><span class="label">Editor</span><h3 style="margin-top:8px">Polish every line</h3><p>Quality checks flag missing terms, numbers, quotes and untranslated lines. Every change keeps its history.</p></article>
+        <article class="fc"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="7" height="16" rx="1.5"/><rect x="14" y="4" width="7" height="16" rx="1.5"/></svg></span><span class="label">Compare</span><h3 style="margin-top:8px">Pick the best version</h3><p>Run one paragraph through up to three engines side by side and keep the one you like.</p></article>
+        <article class="fc"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M17 15l3 3-3 3"/></svg></span><span class="label">History &amp; queue</span><h3 style="margin-top:8px">Line up a whole series</h3><p>Queue volumes and close the app. The queue picks up where it left off next time.</p></article>
+        <article class="fc wide"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="8" r="2.5"/><circle cx="10" cy="18" r="2.5"/><path d="M8.3 6.8l7.4 1M7 8.2l2 7.4M16.7 10.1L12 16"/></svg></span><span class="label">Story Memory</span><h3 style="margin-top:8px">Names that stay names <span class="pro">PRO</span></h3><p>Characters, places and terms stay consistent from chapter 1 to chapter 400. Local AI can scan the book and suggest them for you.</p>
+          <div class="ex"><span><span class="cjk">葵</span> → Aoi</span><span><span class="cjk">王都</span> → Royal Capital</span><span><span class="cjk">魔導書</span> → Grimoire</span></div></article>
+        <article class="fc"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="M7 8l5-5 5 5"/><path d="M5 15v4a2 2 0 002 2h10a2 2 0 002-2v-4"/></svg></span><span class="label">Export</span><h3 style="margin-top:8px">Take it anywhere <span class="pro">PRO</span></h3><p>Novels as PDF, EPUB, Word, text or web pages. Manga as PDF, CBZ or images.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILM -->
+  <section class="chap" id="film" style="padding-top:0">
+    <div class="wrap">
+      <div class="head rv">
+        <span class="label gold">Watch</span>
+        <div><h2>See it <em>in motion</em></h2><p>A short tour of the app, from importing a book to reading it in your language.</p></div>
+      </div>
+      <!-- Put your YouTube video ID in data-youtube-id, e.g. data-youtube-id="dQw4w9WgXcQ" -->
+      <div class="film-frame" id="film-frame" data-youtube-id="">
+        <img src="assets/video/library-hero-poster.webp" alt="" width="1280" height="720">
+        <div class="shade"></div>
+        <button class="film-play" id="film-play" type="button" aria-label="Play the introduction video"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z"/></svg></i><span class="label" id="film-label">Introduction video coming soon</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="gallery" id="gallery">
+    <div class="gal-pin" id="galPin">
+      <div class="gal-bg" aria-hidden="true"><img src="assets/video/library-hero-poster.webp" alt="" width="1280" height="720" decoding="async"></div>
+      <div class="wrap">
+        <div class="head">
+          <span class="label gold">Your library</span>
+          <div><h2>All your stories <em>one shelf</em></h2></div>
+        </div>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="book"><div class="cv"><img decoding="async" src="assets/covers/c01.webp" alt="" width="600" height="900"><span class="ttl cjk">星の見える丘</span><span class="fm">CBZ</span></div><p class="t">星の見える丘</p><p class="label m">Manga · JA → EN</p><span class="bar"><i style="width:100%"></i></span></div>
+        <div class="book"><div class="cv"><img decoding="async" src="assets/covers/c02.webp" alt="" width="600" height="900"><span class="ttl cjk">雨巷里的旧书店</span><span class="fm">TXT</span></div><p class="t">雨巷里的旧书店</p><p class="label m">Novel · ZH → EN</p><span class="bar"><i style="width:99%"></i></span></div>
+        <div class="book"><div class="cv"><img decoding="async" src="assets/covers/c03.webp" alt="" width="600" height="900"><span class="ttl cjk">竜の血脈</span><span class="fm">CBZ</span></div><p class="t">竜の血脈</p><p class="label m">Manga · JA → EN</p><span class="bar"><i style="width:8%"></i></span></div>
+        <div class="book"><div class="cv"><img decoding="async" src="assets/covers/c09.webp" alt="" width="600" height="900"><span class="ttl cjk">桜の約束</span><span class="fm">CBZ</span></div><p class="t">桜の約束</p><p class="label m">Manga · JA → EN</p><span class="bar"><i style="width:40%"></i></span></div>
+        <div class="book"><div class="cv"><img decoding="async" src="assets/covers/c05.webp" alt="" width="600" height="900"><span class="ttl cjk">星河尽头的信</span><span class="fm">EPUB</span></div><p class="t">星河尽头的信</p><p class="label m">Novel · ZH → EN</p><span class="bar"><i style="width:71%"></i></span></div>
+        <div class="book"><div class="cv"><img decoding="async" src="assets/covers/c06.webp" alt="" width="600" height="900"><span class="ttl cjk">달빛 정원</span><span class="fm">ZIP</span></div><p class="t">달빛 정원</p><p class="label m">Manga · KO → EN</p><span class="bar"><i style="width:15%"></i></span></div>
+        <div class="book"><div class="cv"><img decoding="async" src="assets/covers/c07.webp" alt="" width="600" height="900"><span class="ttl cjk">王都の魔法使い</span><span class="fm">EPUB</span></div><p class="t">王都の魔法使い</p><p class="label m">Novel · JA → EN</p><span class="bar"><i style="width:37%"></i></span></div>
+        <div class="book"><div class="cv"><img decoding="async" src="assets/covers/c08.webp" alt="" width="600" height="900"><span class="ttl">The Last Lantern Keeper</span><span class="fm">EPUB</span></div><p class="t">The Last Lantern Keeper</p><p class="label m">Novel · FR → EN</p><span class="bar"><i style="width:87%"></i></span></div>
+        <div class="book"><div class="cv"><img decoding="async" src="assets/covers/c04.webp" alt="" width="600" height="900"><span class="ttl cjk">魔導書の守り手</span><span class="fm">CBR</span></div><p class="t">魔導書の守り手</p><p class="label m">Manga · JA → EN</p><span class="bar"><i style="width:22%"></i></span></div>
+        <div class="book"><div class="cv"><img decoding="async" src="assets/covers/c10.webp" alt="" width="600" height="900"><span class="ttl cjk">별이 지는 밤에</span><span class="fm">TXT</span></div><p class="t">별이 지는 밤에</p><p class="label m">Novel · KO → EN</p><span class="bar"><i style="width:5%"></i></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LANGUAGES -->
+  <section class="chap" style="padding-top:clamp(60px,8vw,120px)">
+    <div class="wrap">
+      <div class="head rv">
+        <span class="label gold">Languages</span>
+        <div><h2>22 languages <em>Any direction</em></h2></div>
+      </div>
+      <div class="langs" id="langs">
+        <span class="cj">日本語</span>
+        <span class="cj">中文</span>
+        <span class="cj">한국어</span>
+        <span>English</span>
+        <span>Türkçe</span>
+        <span>Deutsch</span>
+        <span>Français</span>
+        <span>Español</span>
+        <span>Italiano</span>
+        <span>Português</span>
+        <span>Русский</span>
+        <span>العربية</span>
+        <span>Polski</span>
+        <span>Українська</span>
+        <span>Nederlands</span>
+        <span>Čeština</span>
+        <span>Bahasa Indonesia</span>
+        <span>Tiếng Việt</span>
+        <span>Română</span>
+        <span>ไทย</span>
+        <span>हिन्दी</span>
+        <span>Srpski</span>
+      </div>
+      <p class="label" style="margin-top:40px">Translate from any of them into any other · The app itself speaks all 22</p>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="chap" id="pricing" style="padding-top:0">
+    <div class="wrap">
+      <div class="head rv">
+        <span class="label gold">Pricing</span>
+        <div><h2>Free to read <em>Pro once</em></h2><p>Everything you need to read and translate is free. Pro is a one-time purchase in the Microsoft Store, tied to your Microsoft account. No subscription.</p><span class="draft">Price shown in the Microsoft Store (not set yet)</span></div>
+      </div>
+      <div class="plans">
+        <article class="plan">
+          <span class="label">Free</span>
+          <h3>Free</h3>
+          <p class="price"><b>$0</b> forever</p>
+          <ul>
+            <li><b>Library &amp; reader</b></li>
+            <li><b>Local AI</b> and Google Translate</li>
+            <li>Live screen translation</li>
+            <li>Manga OCR, cleaning &amp; lettering</li>
+            <li>Translation editor &amp; queue</li>
+          </ul>
+          <a class="btn btn-line" href="#download">Download free</a>
+        </article>
+        <article class="plan pro-plan">
+          <span class="label" style="color:var(--gold)">One-time purchase</span>
+          <h3><em>Pro</em></h3>
+          <p class="price"><b style="font-size:40px">Pay once</b> · no expiry</p>
+          <ul>
+            <li>Everything in Free</li>
+            <li><b>DeepL, Google Cloud &amp; Microsoft</b> engines</li>
+            <li><b>Story Memory</b> for names and terms</li>
+            <li><b>Export</b> to PDF, EPUB, Word, CBZ</li>
+            <li>Custom colors and fonts</li>
+          </ul>
+          <a class="btn btn-gold" href="#download" style="background:var(--gold);border-color:var(--gold);color:#241500;box-shadow:0 10px 30px -10px rgba(242,169,59,.7)">Get Pro</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section class="closing" id="download">
+    <div class="bg" id="closeBg"></div>
+    <div class="wrap">
+      <img src="assets/app/logo-512.webp" alt="Novel &amp; Manga Translator app icon" width="120" height="120" style="position:relative;width:120px;height:120px;margin:0 auto 26px;border-radius:28px;box-shadow:0 30px 80px -20px rgba(164,107,255,.8)">
+      <span class="label gold" style="position:relative">Translate · Explore · Enjoy</span>
+      <h2 style="margin-top:22px">Every story deserves <em>to be read</em></h2>
+      <p>Get Novel &amp; Manga Translator from the Microsoft Store and open your first book tonight. For Windows 10 and Windows 11.</p>
+      <div class="acts">
+        <a class="btn btn-gold btn-store" href="#download"><img src="assets/app/microsoft-store.svg" alt="">Get it from Microsoft Store</a>
+        <a class="btn btn-line" href="#features">Explore features</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span class="by"><img src="assets/app/odforge-mark.png" alt="OD Forge" width="34" height="34"><span class="label">© 2026 OD Forge · Novel &amp; Manga Translator</span></span>
+    <nav class="label" aria-label="Footer"><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#atelier">How to use</a><a href="privacy.html">Privacy</a></nav>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce)document.querySelectorAll('video').forEach(function(v){v.removeAttribute('autoplay');try{v.pause()}catch(e){}});
+
+  /* ================= YouTube film ================= */
+  (function(){var f=document.getElementById('film-frame'),b=document.getElementById('film-play'),l=document.getElementById('film-label');if(!f)return;var id=(f.dataset.youtubeId||'').trim();
+    if(!id){b.disabled=true;b.style.cursor='default';return}
+    l.textContent='Play the introduction';
+    b.addEventListener('click',function(){var fr=document.createElement('iframe');fr.src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id)+'?autoplay=1&rel=0&modestbranding=1';fr.title='Novel & Manga Translator introduction';fr.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';fr.allowFullscreen=true;f.innerHTML='';f.appendChild(fr)});
+  })();
+
+  /* ================= play videos only while visible ================= */
+  if('IntersectionObserver' in window&&!reduce){var vio=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;if(e.isIntersecting){var p=v.play();if(p&&p.catch)p.catch(function(){})}else v.pause()})},{rootMargin:'100px'});
+    document.querySelectorAll('video').forEach(function(v){v.removeAttribute('autoplay');v.pause();vio.observe(v)});}
+
+  /* ================= mobile menu ================= */
+  (function(){var btn=document.getElementById('menuBtn'),sheet=document.getElementById('msheet'),root=document.documentElement;if(!btn)return;
+    function set(o){root.classList.toggle('menu-open',o);btn.setAttribute('aria-expanded',o);btn.setAttribute('aria-label',o?'Close menu':'Open menu');document.body.style.overflow=o?'hidden':'';if(window.__lenis){o?window.__lenis.stop():window.__lenis.start()}}
+    btn.addEventListener('click',function(){set(!root.classList.contains('menu-open'))});
+    sheet.addEventListener('click',function(e){if(e.target.closest('a'))set(false)},true);
+    addEventListener('keydown',function(e){if(e.key==='Escape')set(false)});
+    addEventListener('resize',function(){if(innerWidth>900)set(false)});})();
+
+  /* ================= nav ================= */
+  var nav=document.getElementById('nav');
+  function navState(){nav.classList.toggle('solid',scrollY>innerHeight*.6)}navState();addEventListener('scroll',navState,{passive:true});
+
+  /* split helpers */
+  var st=document.getElementById('statement');
+  (function wrapWords(el){[].slice.call(el.childNodes).forEach(function(nd){if(nd.nodeType===3){var f=document.createDocumentFragment();nd.textContent.split(/(\s+)/).forEach(function(p){if(/^\s+$/.test(p)||!p)f.appendChild(document.createTextNode(p));else{var s=document.createElement('span');s.className='w';s.textContent=p;f.appendChild(s)}});el.replaceChild(f,nd)}else if(nd.nodeType===1){wrapWords(nd)}})})(st);
+  var src=document.getElementById('morphSrc'),dst=document.getElementById('morphDst');
+  src.innerHTML=src.textContent.split('').map(function(c){return '<span>'+c+'</span>'}).join('');
+  dst.innerHTML=dst.textContent.split(' ').map(function(w){return '<span>'+w+'</span>'}).join(' ');
+
+  if(!window.gsap||!window.ScrollTrigger||reduce){
+    document.querySelectorAll('.statement .w,.morph-dst span,.bubble .en').forEach(function(e){e.style.opacity=1});
+    document.querySelectorAll('.morph-src,.bubble .jp').forEach(function(e){e.style.opacity=0});
+    document.querySelectorAll('.words .wd').forEach(function(e){e.style.cssText='position:static;opacity:1'});document.querySelector('.words').style.cssText='height:auto;padding:120px 0;display:flex;flex-direction:column';
+    document.querySelectorAll('.nums b').forEach(function(b){b.textContent=b.dataset.count});
+    return;
+  }
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ignoreMobileResize:true});
+  /* decode heavy pictures before they move, so the first pass is smooth */
+  (function(){var imgs=[].slice.call(document.querySelectorAll('#lid img,#macFull img,#shelf img,.gal-bg img,.page .art'));
+    imgs.forEach(function(i){i.loading='eager';i.decoding='async'});
+    var go=function(){imgs.forEach(function(i){if(i.decode)i.decode().catch(function(){})})};
+    (window.requestIdleCallback||function(f){setTimeout(f,300)})(go);})();
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){if(scrollY<innerHeight)ScrollTrigger.refresh()});
+  if(window.Lenis){try{var lenis=new Lenis({lerp:.075});window.__lenis=lenis;lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(function(t){lenis.raf(t*1000)});gsap.ticker.lagSmoothing(0);
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var id=a.getAttribute('href');var t=id==='#top'?0:document.querySelector(id);if(t!==null){e.preventDefault();lenis.scrollTo(t,{duration:1.6,offset:-72})}})});}catch(e){}}
+
+  /* hero intro: slow push-in + masked lines */
+  gsap.fromTo('#scene',{scale:1.14},{scale:1.02,duration:3.2,ease:'power2.out'});
+  gsap.from('.hero h1 .ln>span',{yPercent:115,duration:1.5,ease:'expo.out',stagger:.11,delay:.25});
+  gsap.from('.hero .kicker span,.cta-row,.caps,.scroll-cue',{y:20,opacity:0,duration:1.2,ease:'power3.out',stagger:.1,delay:.9});
+  gsap.from('.nav',{y:-20,opacity:0,duration:1.2,ease:'power3.out',delay:.5,clearProps:'transform,opacity'});
+  /* hero parallax on scroll */
+  gsap.to('#heroImg',{yPercent:10,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+  gsap.to('.hero-copy',{y:-80,opacity:0,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'70% top',scrub:true}});
+
+  /* statement word fill */
+  gsap.to('#statement .w',{opacity:1,stagger:.05,ease:'none',scrollTrigger:{trigger:'#statement',start:'top 80%',end:'bottom 45%',scrub:true}});
+  gsap.from('.stat',{y:30,opacity:0,stagger:.12,duration:1.2,ease:'power3.out',scrollTrigger:{trigger:'.intro-meta',start:'top 88%'}});
+
+  /* giant words, one after another */
+  var wds=gsap.utils.toArray('#words .wd');
+  var wt=gsap.timeline({scrollTrigger:{trigger:'#words',start:'top top',end:'+=240%',pin:true,scrub:.8}});
+  wds.forEach(function(w,i){
+    wt.fromTo(w,{opacity:0,scale:1.6,filter:'blur(20px)'},{opacity:1,scale:1,filter:'blur(0px)',duration:1,ease:'power2.out'},i*1.6);
+    if(i<wds.length-1)wt.to(w,{opacity:0,scale:.7,filter:'blur(12px)',duration:.8,ease:'power2.in'},i*1.6+1.1);
+  });
+  wt.fromTo('#words .sub',{opacity:0},{opacity:1,duration:.6},wds.length*1.6-.8).to({},{duration:.6});
+
+  /* laptop: lid opens, then the screen flies toward you */
+  function macFit(){var lap=document.getElementById('laptop'),lid=document.getElementById('lid'),scr=lid.querySelector('.screen'),mf=document.getElementById('macFull'),im=mf.querySelector('img');
+    var L=lap.parentNode.offsetTop+lap.offsetTop,O=L+lap.offsetHeight*.45,C=L+lid.offsetTop+scr.offsetTop+scr.offsetHeight/2,sc=im.offsetWidth/scr.offsetWidth,T=mf.offsetTop+im.offsetTop+im.offsetHeight/2;
+    return {s:sc,y:T-(O+(C-O)*sc)}}
+  var lt=gsap.timeline({scrollTrigger:{trigger:'#mac',start:'top top',end:'+=260%',pin:true,scrub:1}});
+  lt.fromTo('#lid',{rotateX:-90},{rotateX:0,duration:1.2,ease:'power2.inOut'},0)
+    .fromTo('#laptop',{rotateX:22,scale:.72,y:60},{rotateX:0,scale:.9,y:0,duration:1.2,ease:'power2.inOut'},0)
+    .to('#macHead',{opacity:0,y:-60,duration:.5},1.25)
+    .set('#laptop',{transformOrigin:'50% 45%'},1.29)
+    .to('#laptop',{scale:function(){return macFit().s},y:function(){return macFit().y},duration:1,ease:'power2.inOut'},1.3)
+    .fromTo('#macFull',{opacity:0},{opacity:1,duration:.3,ease:'none'},2.3)
+    .to('#laptop',{opacity:0,duration:.15},2.6)
+    .to({},{duration:.3});
+
+  /* engine chip */
+  gsap.fromTo('#chip',{scale:1.8,opacity:0,filter:'blur(24px)'},{scale:1,opacity:1,filter:'blur(0px)',ease:'none',scrollTrigger:{trigger:'#engine',start:'top 85%',end:'top 15%',scrub:true}});
+  gsap.fromTo('#sweep',{xPercent:-60},{xPercent:60,ease:'none',scrollTrigger:{trigger:'#engine',start:'top 40%',end:'bottom 60%',scrub:true}});
+  gsap.from('.pins i',{scaleX:0,transformOrigin:'right center',stagger:.05,duration:1,ease:'power3.out',scrollTrigger:{trigger:'#chip',start:'top 50%'}});
+  gsap.from('.eng-h,.engine .lead',{y:60,opacity:0,stagger:.15,duration:1.4,ease:'power3.out',scrollTrigger:{trigger:'.eng-h',start:'top 85%'}});
+  gsap.utils.toArray('.nums b').forEach(function(b){var o={v:+(b.dataset.from||0)};ScrollTrigger.create({trigger:b,start:'top 88%',once:true,onEnter:function(){gsap.to(o,{v:+b.dataset.count,duration:1.8,ease:'power3.out',onUpdate:function(){b.textContent=Math.round(o.v)}})}})});
+
+  /* headings rise */
+  gsap.utils.toArray('.rv').forEach(function(el){gsap.from(el.querySelectorAll('.label,h2,p,.draft'),{y:50,opacity:0,duration:1.4,ease:'power3.out',stagger:.1,scrollTrigger:{trigger:el,start:'top 82%'}})});
+  /* collection images: curtain + inner parallax */
+  gsap.utils.toArray('.c-img').forEach(function(c){
+    gsap.fromTo(c,{clipPath:'inset(100% 0 0 0)'},{clipPath:'inset(0% 0 0 0)',duration:1.6,ease:'expo.inOut',scrollTrigger:{trigger:c,start:'top 85%'}});
+  });
+  gsap.utils.toArray('.c-txt').forEach(function(t){gsap.from(t.children,{y:30,opacity:0,stagger:.08,duration:1.2,ease:'power3.out',scrollTrigger:{trigger:t,start:'top 90%'}})});
+
+  /* atelier: manga bubbles */
+  var steps=document.querySelectorAll('#steps li'),hudR=document.getElementById('hudR'),page=document.getElementById('page');
+  function step(i,l){return function(){steps.forEach(function(s,k){s.classList.toggle('on',k===i)});hudR.textContent=l}}
+  function placeBoxes(){var pb=page.getBoundingClientRect();page.querySelectorAll('.box').forEach(function(b){var t=page.querySelector('.'+b.dataset.for).getBoundingClientRect();b.style.left=(t.left-pb.left-8)+'px';b.style.top=(t.top-pb.top-8)+'px';b.style.width=(t.width+16)+'px';b.style.height=(t.height+16)+'px'})}
+  placeBoxes();ScrollTrigger.addEventListener('refreshInit',placeBoxes);
+  var mg=gsap.timeline({scrollTrigger:{trigger:'.atelier',start:'top top',end:'+=220%',pin:true,scrub:.8}});
+  mg.call(step(0,'Ready'),null,0)
+    .fromTo('#scan',{top:'-140px'},{top:'100%',duration:1,ease:'none'},.1)
+    .call(step(1,'Detecting'),null,.12)
+    .to('.box',{opacity:1,stagger:.25,duration:.15},.3)
+    .call(step(1,'3 bubbles found'),null,1.05)
+    .call(step(2,'Reading'),null,1.2)
+    .to('.bubble .jp',{opacity:0,scale:.85,filter:'blur(4px)',stagger:.15,duration:.3},1.3)
+    .call(step(3,'Typesetting'),null,1.6)
+    .to('.bubble .en',{opacity:1,stagger:.15,duration:.3},1.6)
+    .to('.box',{opacity:0,duration:.25},2.1)
+    .call(step(3,'Translated · JA → EN'),null,2.2)
+    .to({},{duration:.3});
+
+  /* novel sentence morph */
+  var pct=document.getElementById('morphPct');
+  var mt=gsap.timeline({scrollTrigger:{trigger:'#morph',start:'top top',end:'+=150%',pin:true,scrub:.8,onUpdate:function(s){pct.textContent=Math.round(s.progress*100)+'% translated'}}});
+  mt.to('#morphSrc span',{opacity:0,y:-16,filter:'blur(6px)',stagger:.02,duration:.3},.05)
+    .fromTo('#morphDst span',{opacity:0,y:22,filter:'blur(8px)'},{opacity:1,y:0,filter:'blur(0px)',stagger:.035,duration:.3},.3)
+    .to('#morphBar',{width:'100%',ease:'none',duration:mt.duration()},0);
+
+  /* features list lines */
+  gsap.from('.fc',{y:50,opacity:0,stagger:.08,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:'.feats',start:'top 85%'}});
+  document.querySelectorAll('.fc').forEach(function(c){c.addEventListener('pointermove',function(e){var r=c.getBoundingClientRect();c.style.setProperty('--fx',(e.clientX-r.left)+'px');c.style.setProperty('--fy',(e.clientY-r.top)+'px')})});
+
+  /* gallery: horizontal shelf */
+  var shelf=document.getElementById('shelf');
+  function dist(){return Math.max(0,shelf.scrollWidth-innerWidth+60)}
+  gsap.to(shelf,{x:function(){return -dist()},ease:'none',force3D:true,scrollTrigger:{trigger:'#galPin',start:'top top',end:function(){return '+='+Math.round(dist()*1.8)},pin:true,scrub:1.2,anticipatePin:1,invalidateOnRefresh:true}});
+
+  gsap.from('#langs > span',{y:60,opacity:0,stagger:.1,duration:1.4,ease:'power3.out',scrollTrigger:{trigger:'#langs',start:'top 85%'}});
+  gsap.from('.plan',{y:60,opacity:0,stagger:.15,duration:1.3,ease:'power3.out',scrollTrigger:{trigger:'.plans',start:'top 85%'}});
+  gsap.fromTo('#closeBg',{yPercent:-8,scale:1.1},{yPercent:8,scale:1,ease:'none',scrollTrigger:{trigger:'.closing',start:'top bottom',end:'bottom top',scrub:true}});
+  gsap.from('.closing h2,.closing p,.closing .acts',{y:50,opacity:0,stagger:.12,duration:1.4,ease:'power3.out',scrollTrigger:{trigger:'.closing',start:'top 70%'}});
+
+  addEventListener('load',function(){ScrollTrigger.refresh()});
+})();
+</script>
