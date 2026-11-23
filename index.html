@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Novel &amp; Manga Translator</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Translate novels and manga between 22 languages on Windows. Local AI works offline. EPUB, TXT, DOCX, HTML, CBZ, CBR, ZIP and PDF.">
@@ -357,7 +362,15 @@ footer{padding-block:56px 40px}
 @media (max-width:700px){.foot{grid-template-columns:1fr}}
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important}.words{height:auto;padding-block:120px;display:flex;flex-direction:column;gap:10px}.words .wd,.words .sub{position:static;opacity:1}.statement .w{opacity:1}.morph-dst span,.bubble .en{opacity:1}.bubble .jp,.morph-src{opacity:0}.shot-frame{clip-path:none}}
+/* Lenis recommended styles */
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+.lenis.lenis-stopped{overflow:hidden}
+.lenis.lenis-smooth iframe{pointer-events:none}
 </style>
+</head>
+<body>
 
 <header class="nav" id="nav">
   <div class="nav-in">
@@ -772,8 +785,18 @@ footer{padding-block:56px 40px}
     var go=function(){imgs.forEach(function(i){if(i.decode)i.decode().catch(function(){})})};
     (window.requestIdleCallback||function(f){setTimeout(f,300)})(go);})();
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){if(scrollY<innerHeight)ScrollTrigger.refresh()});
-  if(window.Lenis){try{var lenis=new Lenis({lerp:.075});window.__lenis=lenis;lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(function(t){lenis.raf(t*1000)});gsap.ticker.lagSmoothing(0);
-    document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var id=a.getAttribute('href');var t=id==='#top'?0:document.querySelector(id);if(t!==null){e.preventDefault();lenis.scrollTo(t,{duration:1.6,offset:-72})}})});}catch(e){}}
+  /* smooth scroll (Lenis). Only used when it can really drive the page; otherwise the browser's own scroll stays in charge */
+  (function(){
+    if(!window.Lenis||document.compatMode!=='CSS1Compat'||document.scrollingElement!==document.documentElement)return;
+    var lenis,raf=0,tick=function(t){lenis.raf(t*1000)};
+    function off(){try{gsap.ticker.remove(tick)}catch(e){}if(raf)cancelAnimationFrame(raf);try{lenis&&lenis.destroy()}catch(e){}window.__lenis=null}
+    try{lenis=new Lenis({lerp:.075});lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(tick);gsap.ticker.lagSmoothing(0);window.__lenis=lenis}catch(e){off();return}
+    /* watchdog: if the gsap ticker never feeds Lenis, run it on our own requestAnimationFrame loop */
+    setTimeout(function(){if(!window.__lenis||lenis.time)return;try{gsap.ticker.remove(tick)}catch(e){}(function loop(t){if(!window.__lenis)return;lenis.raf(t);raf=requestAnimationFrame(loop)})(performance.now())},700);
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var l=window.__lenis;if(!l)return;var id=a.getAttribute('href');var t=id==='#top'||id==='#'?0:document.querySelector(id);if(t===null)return;e.preventDefault();var y0=scrollY;l.scrollTo(t,{duration:1.6,offset:-72});
+      /* if Lenis did not move the page, fall back to a native jump and switch Lenis off */
+      setTimeout(function(){if(scrollY===y0&&window.__lenis){off();var y=t===0?0:t.getBoundingClientRect().top+scrollY-72;scrollTo({top:y,behavior:'smooth'})}},400)})});
+  })();
 
   /* hero intro: slow push-in + masked lines */
   gsap.fromTo('#scene',{scale:1.14},{scale:1.02,duration:3.2,ease:'power2.out'});
@@ -869,3 +892,5 @@ footer{padding-block:56px 40px}
   addEventListener('load',function(){ScrollTrigger.refresh()});
 })();
 </script>
+</body>
+</html>
